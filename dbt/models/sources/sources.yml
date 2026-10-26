@@ -1,0 +1,39 @@
+version: 2
+sources:
+- name: raw
+  schema: transactions_db
+  description: Полный train.csv из HW2; test.csv не содержит меток фрода.
+  tables:
+  - name: transactions
+    description: Сырые транзакции.
+    columns:
+    - name: transaction_id
+      description: Номер строки train.csv.
+    - name: transaction_time
+      description: Исходное время строкой.
+    - name: merch
+      description: Мерчант.
+    - name: cat_id
+      description: Категория.
+    - name: amount
+      description: Сумма.
+    - name: name_1
+      description: Имя.
+    - name: name_2
+      description: Фамилия.
+    - name: gender
+      description: Пол.
+    - name: street
+      description: Адрес клиента.
+    - name: us_state
+      description: Штат.
+    - name: lat
+      description: Широта клиента.
+    - name: lon
+      description: Долгота клиента.
+    - name: merchant_lat
+      description: Широта мерчанта.
+    - name: merchant_lon
+      description: Долгота мерчанта.
+    - name: target
+      description: 'Метка фрода: 0 или 1.'

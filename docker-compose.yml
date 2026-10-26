@@ -1,0 +1,19 @@
+name: hw4-dbt
+services:
+  clickhouse:
+    image: clickhouse/clickhouse-server:25.3.2.39
+    ports:
+      - "127.0.0.1:8124:8123"
+    environment:
+      CLICKHOUSE_USER: student
+      CLICKHOUSE_PASSWORD: student
+      CLICKHOUSE_DEFAULT_ACCESS_MANAGEMENT: 1
+    volumes:
+      - clickhouse_data:/var/lib/clickhouse
+    healthcheck:
+      test: ["CMD", "clickhouse-client", "--user", "student", "--password", "student", "--query", "SELECT 1"]
+      interval: 3s
+      timeout: 5s
+      retries: 30
+volumes:
+  clickhouse_data:

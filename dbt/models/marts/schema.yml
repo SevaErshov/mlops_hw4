@@ -1,0 +1,169 @@
+version: 2
+models:
+- name: mart_daily_state_metrics
+  description: Дневные метрики по штатам.
+  columns:
+  - name: transaction_date
+    description: Дата транзакции.
+    tests:
+    - not_null
+  - name: state
+    description: Код штата США.
+    tests:
+    - not_null
+  - name: transaction_count
+    description: Количество транзакций.
+    tests:
+    - not_null
+  - name: total_amount
+    description: Общая сумма транзакций.
+    tests:
+    - not_null
+  - name: avg_amount
+    description: Средний чек.
+    tests:
+    - not_null
+  - name: p95_amount
+    description: Точный 95-й перцентиль суммы.
+    tests:
+    - not_null
+  - name: large_transaction_share
+    description: Доля транзакций от 1000 в процентах.
+    tests:
+    - not_null
+  tests:
+  - dbt_utils.unique_combination_of_columns:
+      combination_of_columns:
+      - transaction_date
+      - state
+- name: mart_fraud_by_category
+  description: Уровень фрода по категориям.
+  columns:
+  - name: category
+    description: Категория покупки.
+    tests:
+    - not_null
+    - unique
+  - name: transaction_count
+    description: Количество транзакций.
+    tests:
+    - not_null
+  - name: fraud_count
+    description: Количество мошеннических транзакций.
+    tests:
+    - not_null
+  - name: fraud_rate
+    description: Доля фрода в процентах от 0 до 100.
+    tests:
+    - not_null
+    - dbt_expectations.expect_column_values_to_be_between:
+        min_value: 0
+        max_value: 100
+  - name: total_amount
+    description: Общая сумма транзакций.
+    tests:
+    - not_null
+  - name: fraud_amount
+    description: Сумма мошеннических транзакций.
+    tests:
+    - not_null
+  tests:
+  - dbt_utils.unique_combination_of_columns:
+      combination_of_columns:
+      - category
+- name: mart_fraud_by_state
+  description: Географический анализ фрода.
+  columns:
+  - name: state
+    description: Код штата США.
+    tests:
+    - not_null
+    - unique
+  - name: transaction_count
+    description: Количество транзакций.
+    tests:
+    - not_null
+  - name: fraud_count
+    description: Количество мошеннических транзакций.
+    tests:
+    - not_null
+  - name: fraud_rate
+    description: Доля фрода в процентах от 0 до 100.
+    tests:
+    - not_null
+    - dbt_expectations.expect_column_values_to_be_between:
+        min_value: 0
+        max_value: 100
+  - name: customer_count
+    description: Точное количество уникальных клиентов.
+    tests:
+    - not_null
+  - name: merchant_count
+    description: Точное количество уникальных мерчантов.
+    tests:
+    - not_null
+  - name: total_amount
+    description: Общая сумма транзакций.
+    tests:
+    - not_null
+  - name: fraud_amount
+    description: Сумма мошеннических транзакций.
+    tests:
+    - not_null
+  tests:
+  - dbt_utils.unique_combination_of_columns:
+      combination_of_columns:
+      - state
+- name: mart_customer_risk_profile
+  description: История транзакций и учебная сегментация риска клиентов.
+  columns:
+  - name: customer_id
+    description: Хеш имени, фамилии, адреса и координат, приближенный ID клиента.
+    tests:
+    - not_null
+    - unique
+  - name: transaction_count
+    description: Количество транзакций.
+    tests:
+    - not_null
+  - name: fraud_count
+    description: Количество мошеннических транзакций.
+    tests:
+    - not_null
+  - name: fraud_rate
+    description: Доля фрода в процентах от 0 до 100.
+    tests:
+    - not_null
+    - dbt_expectations.expect_column_values_to_be_between:
+        min_value: 0
+        max_value: 100
+  - name: total_amount
+    description: Общая сумма транзакций.
+    tests:
+    - not_null
+  - name: avg_amount
+    description: Средний чек.
+    tests:
+    - not_null
+  - name: first_transaction
+    description: Первая транзакция клиента.
+    tests:
+    - not_null
+  - name: last_transaction
+    description: Последняя транзакция клиента.
+    tests:
+    - not_null
+  - name: risk_level
+    description: 'HIGH: fraud_rate >= 5%, MEDIUM: >= 1%, LOW: < 1%.'
+    tests:
+    - not_null
+    - accepted_values:
+        values:
+        - HIGH
+        - MEDIUM
+        - LOW
+        quote: true
+  tests:
+  - dbt_utils.unique_combination_of_columns:
+      combination_of_columns:
+      - customer_id

@@ -1,0 +1,2 @@
+dbt-core==1.9.8
+dbt-clickhouse==1.9.6

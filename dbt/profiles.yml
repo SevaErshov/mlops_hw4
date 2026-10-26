@@ -1,0 +1,12 @@
+hw4:
+  target: dev
+  outputs:
+    dev:
+      type: clickhouse
+      schema: hw4
+      host: "{{ env_var('CLICKHOUSE_HOST', 'localhost') }}"
+      port: 8124
+      user: student
+      password: student
+      secure: false
+      threads: 4

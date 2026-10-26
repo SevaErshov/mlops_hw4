@@ -1,0 +1,80 @@
+version: 2
+models:
+- name: stg_transactions
+  description: Очистка строк, типизация и расчет признаков. Все строки train сохраняются.
+  columns:
+  - name: transaction_id
+    description: Номер строки train.csv.
+    tests:
+    - not_null
+    - unique
+  - name: transaction_time
+    description: Время транзакции, без перевода часового пояса.
+    tests:
+    - not_null
+  - name: transaction_date
+    description: Дата транзакции.
+    tests:
+    - not_null
+  - name: day_of_week
+    description: 'ISO день недели: 1 = понедельник.'
+    tests:
+    - not_null
+    - accepted_values:
+        values:
+        - 1
+        - 2
+        - 3
+        - 4
+        - 5
+        - 6
+        - 7
+        quote: false
+  - name: merchant
+    description: Мерчант.
+    tests:
+    - not_null
+  - name: category
+    description: Категория покупки.
+    tests:
+    - not_null
+  - name: amount
+    description: Сумма с двумя знаками после запятой.
+    tests:
+    - not_null
+  - name: amount_bucket
+    description: SMALL < 100, MEDIUM от 100 до 1000, LARGE от 1000.
+    tests:
+    - not_null
+    - accepted_values:
+        values:
+        - SMALL
+        - MEDIUM
+        - LARGE
+        quote: true
+  - name: gender
+    description: Пол клиента.
+    tests:
+    - not_null
+    - accepted_values:
+        values:
+        - M
+        - F
+        quote: true
+  - name: state
+    description: Код штата США.
+    tests:
+    - not_null
+  - name: customer_id
+    description: Хеш имени, фамилии, адреса и координат, приближенный ID клиента.
+    tests:
+    - not_null
+  - name: is_fraud
+    description: Признак фрода, 0 или 1.
+    tests:
+    - not_null
+    - accepted_values:
+        values:
+        - 0
+        - 1
+        quote: false
